@@ -35,7 +35,7 @@ int	check_file(char *infile, char *outfile)
 		return (1);
 	return (0);
 }
-static void	check_args(int ac, char **av)
+void	check_args(int ac, char **av)
 {
 	if (ac < 5)
 	{
@@ -85,5 +85,10 @@ void	error_dup2(void)
 void	error_execve(void)
 {
 	perror("execve failed");
+	exit(1);
+}
+void	error_cmd(void)
+{
+	perror("zsh: command not found:");
 	exit(1);
 }

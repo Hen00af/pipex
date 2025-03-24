@@ -6,41 +6,44 @@
 #    By: shattori <shattori@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/26 19:42:34 by shattori          #+#    #+#              #
-#    Updated: 2025/03/21 22:20:55 by shattori         ###   ########.fr        #
+#    Updated: 2025/03/22 18:32:32 by shattori         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC = cc
-CFLAGS :=  -O2
-NAME = pipex2
+CFLAGS := -O2
+NAME = pipex
 SRC_DIR := ./srcs
-SRCS = $(SRC_DIR)/main.c $(SRC_DIR)/error_handling.c $(SRC_DIR)/make_process.c
+LIBFT_DIR := ./srcs/libft
+LIBFT_AR := $(LIBFT_DIR)/libft.a
+SRCS = $(SRC_DIR)/main.c $(SRC_DIR)/error_handling.c $(SRC_DIR)/make_process.c \
+       $(LIBFT_AR)
+
 IFLAGS := ./ 
 OBJS = $(SRCS:.c=.o)
-LIBFT_DIR = ./srcs/libft/
+
 # デフォルトターゲット
 all: $(NAME)
 
 # 実行可能ファイルを作成
-$(NAME): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -o $(NAME) 
-	$(MAKE_LIBFT)
+$(NAME): $(OBJS) $(LIBFT_AR)
+	$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
 
-$(MAKE_LIBFT): make -C $(LIBFT_DIR)
-	
+# libft.a をビルドするターゲット
+$(LIBFT_AR):
+	make -C $(LIBFT_DIR)
 
-# オブジェクトファイルの生成
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+# .c ファイルを .o にコンパイル
+$(SRC_DIR)/%.o: $(SRC_DIR)/%.c
+	$(CC) $(CFLAGS) -I$(IFLAGS) -c $< -o $@
 
-# クリーンアップ
+# クリーンターゲット（オブジェクトファイルと実行ファイルを削除）
 clean:
-	rm -f $(OBJS)
+	rm -rf $(OBJS)
+	make clean -C $(LIBFT_DIR)
 
-# フルクリーンアップ（実行ファイルも削除）
 fclean: clean
 	rm -f $(NAME)
+	rm -f $(LIBFT_AR)
 
-# 再構築（クリーン→all）
 re: fclean all
-

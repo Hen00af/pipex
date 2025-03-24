@@ -1,4 +1,4 @@
-#include "pipex.h"
+#include "./srcs/pipex.h"
 
 int	dir_check(char *file)
 {
@@ -117,69 +117,6 @@ char	*find_path(char *cmd, char **environ)
 	while (paths[++i])
 		free(paths[i]);
 	free(paths);
-	return (0);
-}
-
-void	handle_parent(int i, int ac, char **av)
-{
-	int	saved_stdin;
-	int	saved_stdout;
-
-	saved_stdin = dup(STDIN_FILENO);
-	saved_stdout = dup(STDOUT_FILENO);
-	wait(NULL);
-	if (i <= ac - 4)
-		make_process(ac, av, i + 1);
-	dup2(saved_stdin, STDIN_FILENO);
-	dup2(saved_stdout, STDOUT_FILENO);
-	close(saved_stdin);
-	close(saved_stdout);
-}
-
-void	handle_child(int pipe_fd[2], int i, int ac, char **av)
-{
-	if (i > 0)
-	{
-		close(pipe_fd[1]);
-		if (dup2(pipe_fd[0], STDIN_FILENO) == FAILED)
-			error_dup2();
-		close(pipe_fd[0]);
-	}
-	if (i < ac - 3)
-	{
-		close(pipe_fd[0]);
-		if (dup2(pipe_fd[1], STDOUT_FILENO) == FAILED)
-			error_dup2();
-		close(pipe_fd[1]);
-	}
-	execute(av[i + 2]);
-}
-
-void	do_pipe(int pipe_fd[2])
-{
-	if (pipe(pipe_fd) == FAILED)
-		error_pipe();
-}
-
-int	make_process(int ac, char **av, int i)
-{
-	int		pipe_fd[2];
-	pid_t	pid;
-
-	if (i < ac - 4)
-		do_pipe(pipe_fd);
-	else
-	{
-		pipe_fd[0] = -1;
-		pipe_fd[1] = -1;
-	}
-	pid = fork();
-	if (pid == FAILED)
-		error_fork();
-	else if (pid == 0) // child process
-		handle_child(pipe_fd, i, ac, av);
-	else // parent process
-		handle_parent(i, ac, av);
 	return (0);
 }
 
