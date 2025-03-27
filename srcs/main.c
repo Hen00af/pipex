@@ -1,5 +1,15 @@
-// #include "error_handling.c"
-// #include "make_process.c"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: shattori <shattori@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/27 20:12:25 by shattori          #+#    #+#             */
+/*   Updated: 2025/03/27 20:12:53 by shattori         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "pipex.h"
 
 int	pipex(int ac, char **av)
@@ -27,12 +37,12 @@ int	pipex(int ac, char **av)
 	}
 	close(input_fd);
 	close(output_fd);
-	return (make_process(ac, av, 0));
+	return (make_process(ac, av, 2));
 }
 
 int	main(int ac, char **av)
 {
-	check_args(ac, av); // 引数の検証
-	pipex(ac, av);      // pipex関数の呼び出し
+	check_args(ac, av);
+	pipex(ac, av);
 	return (0);
 }

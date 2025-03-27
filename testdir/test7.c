@@ -149,15 +149,12 @@ int	main(int argc, char **argv)
 			STDERR_FILENO);
 		return (1);
 	}
-	// 入力ファイルをオープン
 	infile = open(argv[1], O_RDONLY);
 	if (infile < 0)
 		error_input_fd(infile);
 	fd_in = infile; // 最初の入力はinfile
-	// 最後のコマンドの前までループ（cmd1 ~ cmdN-1）
 	for (i = 2; i < argc - 1; i++)
 	{
-		// 最後のコマンドでなければパイプを作成
 		if (i < argc - 2)
 		{
 			if (pipe(pipe_fd) == -1)
@@ -168,11 +165,9 @@ int	main(int argc, char **argv)
 			error_fork();
 		if (pid == 0) // 子プロセス
 		{
-			// 現在の入力 (fd_in) を標準入力にリダイレクト
 			if (dup2(fd_in, STDIN_FILENO) == -1)
 				error_dup2();
 			close(fd_in);
-			// 最後のコマンドでなければパイプの書き込み側を標準出力にリダイレクト
 			if (i < argc - 2)
 			{
 				close(pipe_fd[0]); // 読み取り側は使わないので閉じる
@@ -195,10 +190,8 @@ int	main(int argc, char **argv)
 		}
 		// 親プロセス
 		wait(NULL);
-		// 古い入力ファイルディスクリプタが infile でなければ閉じる
 		if (fd_in != infile)
 			close(fd_in);
-		// 最後のコマンドでなければ、次のプロセスの入力としてパイプの読み取り側を設定
 		if (i < argc - 2)
 		{
 			close(pipe_fd[1]); // 書き込み側は親側では不要

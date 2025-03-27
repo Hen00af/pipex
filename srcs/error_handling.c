@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   error_handling.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: shattori <shattori@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/27 20:13:02 by shattori          #+#    #+#             */
+/*   Updated: 2025/03/27 20:13:04 by shattori         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "pipex.h"
 
 #define THIS_IS_NOT_FILE -1
@@ -35,6 +47,7 @@ int	check_file(char *infile, char *outfile)
 		return (1);
 	return (0);
 }
+
 void	check_args(int ac, char **av)
 {
 	if (ac < 5)
@@ -48,47 +61,4 @@ void	check_args(int ac, char **av)
 		perror("Error: Can't open file");
 		exit(1);
 	}
-}
-void	error_pipe(void)
-{
-	perror("pipe failed");
-	exit(1);
-}
-
-void	error_fork(void)
-{
-	perror("fork failed");
-	exit(1);
-}
-
-void	error_input_fd(int input_fd)
-{
-	perror("Error opening input file");
-	close(input_fd);
-	exit(1);
-}
-
-void	error_output_fd(int input_fd, int output_fd)
-{
-	perror("Error opening output file");
-	close(input_fd);
-	close(output_fd);
-	exit(1);
-}
-
-void	error_dup2(void)
-{
-	perror("dup2 failed");
-	exit(1);
-}
-
-void	error_execve(void)
-{
-	perror("execve failed");
-	exit(1);
-}
-void	error_cmd(void)
-{
-	perror("zsh: command not found:");
-	exit(1);
 }
